@@ -1,0 +1,173 @@
+--- install_orig	2014-02-20 13:04:26.335654000 +0200
++++ install	2014-06-19 15:23:58.340606487 +0300
+@@ -113,7 +113,7 @@
+ echo "of their respective owners."
+ echo
+ echo "Press enter to continue..."
+-read x
++#read x
+ 
+ # Display PGI legal license
+ 
+@@ -122,10 +122,11 @@
+ else 
+   licensefile=$SRC/common/BETA_LICENSE
+ fi
+-more $licensefile
++#more $licensefile
+ echo
+ echo -n 'Do you accept these terms? (accept,decline) '
+-read x
++#read x
++x='accept'
+ ans=`echo $x | awk '{print $1}'`
+ if test "$ans" != "accept" ; then
+   quit
+@@ -145,8 +146,10 @@
+  
+ EOF_NETWORK
+ echo -n 'Please choose install option: ' 
+-read x
++#read x
++x="2"
+ ans=`echo $x | awk '{print $1}'`
++
+ if test -n "$ans" ; then
+   case $ans in
+   1 )
+@@ -220,6 +223,7 @@
+ # write to installation directory.
+ 
+ INSTALL_DIR=/opt/pgi
++
+ cat << EOF_INSTALL_DIR
+ 
+ Please specify the directory path under which the software will be installed.
+@@ -229,7 +233,9 @@
+ EOF_INSTALL_DIR
+  
+ echo -n "Installation directory? [$INSTALL_DIR] "
+-read ans
++#read ans
++[[ -z $1 ]] && echo -e "\nusage install  <path>" && exit
++ans=$1
+ if test -n "$ans" ; then
+   case $ans in
+   ~* )
+@@ -250,7 +256,8 @@
+ if test $network_install -eq 1; then
+   DEFAULT_SHARED=$INSTALL_DIR/$release/share_objects
+   echo "Common local directory on all hosts for shared objects: [$DEFAULT_SHARED]"
+-  read ans
++  #read ans
++  ans=''
+     if test -n "$ans" ; then
+       case $ans in
+       ~* )
+@@ -348,7 +355,8 @@
+ 
+ EOF_CUDA
+ echo -n 'Install CUDA Toolkit Components? (y/n) '
+-read x
++#read x
++x='n'
+ ans=`echo $x | awk '{print $1}'`
+ 
+ if test "$ans" = "y" -o "$ans" = "yes" ; then
+@@ -388,7 +396,8 @@
+ 
+ EOF_AMD
+ echo -n 'Install AMD software components? (y/n) '
+-read x
++#read x
++x=n
+ ans=`echo $x | awk '{print $1}'`
+ 
+ if test "$ans" = "y" -o "$ans" = "yes" ; then
+@@ -432,7 +441,8 @@
+ EOF_JAVA_INST
+      ans="no"
+      echo -n "Overwrite the installed JAVA JRE `ls -1 $INSTALL_DIR/$target/$REL_VERSION/java` ? [$ans] "
+-     read x 
++ #    read x 
++     x='no'
+      if test -n "$x" ; then
+        ans=`echo $x | awk '{print $1}'`
+      fi
+@@ -452,7 +462,8 @@
+ EOF_JAVA
+      ans="yes"
+      echo -n "Install JAVA JRE [$ans] "
+-     read x 
++     #read x
++     x='yes' 
+      if test -n "$x" ; then
+        ans=`echo $x | awk '{print $1}'`
+      fi
+@@ -462,10 +473,11 @@
+   echo
+   echo 'In order to install the JAVA software, please read and accept the'
+   echo 'following license.'
+-  more $SRC/common/LICENSE_JRE.txt
++  #more $SRC/common/LICENSE_JRE.txt
+   echo
+   echo -n 'Do you accept these terms? (accept,decline) '
+-  read x
++  #read x
++  x='accept'
+   ans=`echo $x | awk '{print $1}'`
+   if test "$ans" != "accept" ; then
+     install_java_jre=0
+@@ -480,7 +492,9 @@
+ echo "Installing software into $INSTALL_DIR (this may take some time)."
+ trap "" 2 3
+ cd $SRC
++echo $PART
+ for i in $PART ; do
++echo "PART-$i"
+   tar cf - $i | ( cd $INSTALL_DIR; tar xf - )
+   echo -n \#
+ done
+@@ -615,7 +629,9 @@
+ echo "update the links in that directory to point to the $release directory"
+ echo " "
+ echo -n "Do you wish to update/create links in the $REL_VERSION directory? (y/n) "
+-read x
++#read x
++x='y'
++echo $x
+ ans=`echo $x | awk '{print $1}'`
+ if test "$ans" = "y" -o "$ans" = "yes" ; then
+ 
+@@ -814,7 +830,9 @@
+ 
+ if test -e $SRC/install_mpich; then
+   echo -n 'Do you wish to install MPICH? (y/n) '
+-  read x
++  #read x
++  x='n'
++  echo $x
+   ans=`echo $x | awk '{print $1}'`
+   if test "$ans" = "y" -o "$ans" = "yes" ; then
+     $SRC/install_mpich "$INSTALL_DIR" "$REL_VERSION" "$release"
+@@ -855,7 +873,9 @@
+ 
+   echo 
+   echo -n 'Do you wish to generate license keys? (y/n) '
+-  read x
++# read x
++  x='n'
++  cp ~/licenses/pgi/license.dat $INSTALL_DIR/
+   ans=`echo $x | awk '{print $1}'`
+ 
+   if test "$ans" = "y" -o "$ans" = "yes" ; then
+@@ -882,7 +902,8 @@
+ 
+ echo
+ echo -n 'Do you want the files in the install directory to be read-only? (y/n) '
+-read x
++#read x
++x='n'
+ ans=`echo $x | awk '{print $1}'`
+ if test "$ans" = "y" -o "$ans" = "yes" ; then
+ 	if test $is32 ; then

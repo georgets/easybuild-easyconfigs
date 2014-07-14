@@ -1,0 +1,34 @@
+name = "PGI"
+version = '14.2'
+
+homepage = 'http://www.pgroup.com/'
+description = """PGI optimizing multi-core x64 compiler"""
+
+toolchain = {'name': 'dummy', 'version': 'dummy'}
+
+sources = ['pgilinux-2014-142-x86_64.tar.gz']
+patches = ['pgi-14.2-install-defaults.patch']
+
+dependencies = [('GCC', '4.8.3')]
+
+verdir="linux86-64/%s" % version
+
+languages = ['c', 'c++', 'fortran', 'lto']
+
+sanity_check_paths = {
+    'files': ["%s/bin/pgcc" % verdir], 
+    'dirs': []
+}
+modextravars = {
+    'PGIRSH': '/usr/bin/ssh'     
+}
+modextrapaths = {
+    'MANPATH': "%s/man" % verdir,
+    'PATH': "%s/bin" % verdir,
+    'LD_LIBRARY_PATH': [ "%s/lib" % verdir,
+         "%s/libso" % verdir] 
+}
+
+maxparallel = 1
+
+moduleclass = 'compiler'
